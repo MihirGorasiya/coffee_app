@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:coffee_app/controller/statecontroller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'w_rotatable_image.dart';
 
@@ -10,14 +12,14 @@ class ProductListCard extends StatelessWidget {
     required this.rotAngle,
     required this.imageURL,
     required this.coffeeName,
-    required this.coffeeDesc,
     required this.coffeePrice,
+    required this.myIndex,
   }) : super(key: key);
 
+  final int myIndex;
   final double rotAngle;
   final String imageURL;
   final String coffeeName;
-  final String coffeeDesc;
   final String coffeePrice;
 
   @override
@@ -42,10 +44,7 @@ class ProductListCard extends StatelessWidget {
               imageURL: imageURL,
             ),
             CoffeeNameWidget(coffeeName: coffeeName),
-            CoffeeDescriptionWidget(coffeeDesc: coffeeDesc),
-            Expanded(child: SizedBox()),
-            PriceBannerWidget(coffeePrice: coffeePrice),
-            SizedBox(height: 15),
+            PriceBannerWidget(coffeePrice: coffeePrice, myIndex: myIndex),
           ],
         ),
       ),
@@ -76,35 +75,15 @@ class CoffeeNameWidget extends StatelessWidget {
   }
 }
 
-class CoffeeDescriptionWidget extends StatelessWidget {
-  const CoffeeDescriptionWidget({
-    Key? key,
-    required this.coffeeDesc,
-  }) : super(key: key);
-
-  final String coffeeDesc;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-      child: Text(
-        coffeeDesc,
-        style: TextStyle(
-          fontSize: 15,
-          color: Color.fromARGB(255, 160, 160, 160),
-        ),
-      ),
-    );
-  }
-}
-
 class PriceBannerWidget extends StatelessWidget {
-  const PriceBannerWidget({
+  PriceBannerWidget({
     Key? key,
     required this.coffeePrice,
+    required this.myIndex,
   }) : super(key: key);
 
+  final Controller c = Get.find();
+  final int myIndex;
   final String coffeePrice;
 
   @override
@@ -123,6 +102,21 @@ class PriceBannerWidget extends StatelessWidget {
           ),
         ),
         InkWell(
+          onTap: () {
+            bool isExist = false;
+            int index = -1;
+            for (var i = 0; i < c.cartList.length; i++) {
+              if (c.cartList[i]['index'] == myIndex) {
+                isExist = true;
+                index = i;
+              }
+            }
+            if (isExist) {
+              c.cartList[index]['qnt'] = c.cartList[index]['qnt']! + 1;
+            } else {
+              c.cartList.add({'index': myIndex, 'qnt': 1});
+            }
+          },
           child: Container(
             margin: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
             decoration: BoxDecoration(

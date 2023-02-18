@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:coffee_app/controller/statecontroller.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import 'pages/home_page.dart';
 
@@ -9,9 +11,8 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  // This widget is the root of your application.
+  MyApp({Key? key}) : super(key: key);
+  final Controller c = Get.put(Controller());
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
